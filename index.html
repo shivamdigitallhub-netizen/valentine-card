@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💖 One Question</title>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Comic Sans MS', cursive;
+}
+
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  width: 90%;
+  max-width: 350px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+button {
+  padding: 12px 20px;
+  margin: 10px;
+  border-radius: 25px;
+  border: none;
+  font-size: 18px;
+}
+
+#yes {
+  background: #ff4d6d;
+  color: white;
+}
+
+#no {
+  background: #ddd;
+  position: relative;
+}
+
+.hidden-love {
+  display: none;
+}
+</style>
+</head>
+
+<body>
+<div class="card">
+  <h2>Will you be my Valentine? 💘</h2>
+  <button id="yes">YES 💖</button>
+  <button id="no">NO 💔</button>
+  <p id="msg"></p>
+
+  <p class="hidden-love">Always Remember I Dream Of You</p>
+</div>
+
+<script>
+const words = document.querySelector('.hidden-love').innerText.split(" ");
+const secret = words.map(w => w[0]).join("");
+
+document.getElementById("yes").onclick = () => {
+  document.getElementById("msg").innerText = "Yay! 💕 I was hoping you'd say YES!";
+};
+
+document.getElementById("no").onclick = () => {
+  document.getElementById("msg").innerText = "Hmm… try again 😜";
+};
+</script>
+</body>
+</html>
