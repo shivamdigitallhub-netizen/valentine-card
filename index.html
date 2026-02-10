@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💖 One Question</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>💖 Valentine</title>
 
 <style>
 * { box-sizing: border-box; }
@@ -15,26 +15,30 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: "Poppins", system-ui, sans-serif;
+  font-family: "Poppins", sans-serif;
   overflow: hidden;
 }
 
 .card {
   background: white;
-  padding: 36px;
-  border-radius: 26px;
+  padding: 32px;
+  border-radius: 24px;
   text-align: center;
   width: 90%;
   max-width: 380px;
-  box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
   position: relative;
-  z-index: 10;
 }
 
-h2 { margin: 0; line-height: 1.5; }
+h2 {
+  margin: 0;
+  line-height: 1.4;
+}
 
 .buttons {
-  margin-top: 22px;
+  margin-top: 24px;
+  position: relative;
+  height: 120px;
 }
 
 button {
@@ -49,7 +53,7 @@ button {
 #play {
   background: #111827;
   color: white;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
 
 #yes {
@@ -57,8 +61,16 @@ button {
   color: white;
 }
 
+#no {
+  background: #f3f4f6;
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 #msg {
-  margin-top: 24px;
+  margin-top: 22px;
   font-size: 16px;
   font-weight: 600;
   color: #e11d48;
@@ -69,14 +81,16 @@ button {
 
 <body>
 
+<!-- REAL AUDIO ELEMENT -->
 <audio id="music" src="music.mp3" loop></audio>
 
 <div class="card">
   <h2>Will you be my Valentine,<br>Upasana? 💘</h2>
 
   <div class="buttons">
-    <button id="play">▶ Play Music 🎵</button><br><br>
+    <button id="play">▶ Play Music 🎵</button><br>
     <button id="yes">YES 💖</button>
+    <button id="no">NO 💔</button>
   </div>
 
   <p id="msg">Always remember — I dream of you ❤️</p>
@@ -86,18 +100,29 @@ button {
 const music = document.getElementById("music");
 const playBtn = document.getElementById("play");
 const yesBtn = document.getElementById("yes");
+const noBtn = document.getElementById("no");
 const msg = document.getElementById("msg");
 
-playBtn.onclick = () => {
+/* PLAY MUSIC — CLEAN */
+playBtn.addEventListener("click", () => {
   music.volume = 0.6;
   music.play();
   playBtn.innerText = "🎶 Music Playing";
   playBtn.disabled = true;
-};
+});
 
-yesBtn.onclick = () => {
+/* NO BUTTON RUNS AWAY */
+noBtn.addEventListener("mouseenter", () => {
+  const x = Math.random() * 240 - 120;
+  const y = Math.random() * 60;
+  noBtn.style.transform = `translate(${x}px, ${y}px)`;
+});
+
+/* YES CLICK */
+yesBtn.addEventListener("click", () => {
   msg.style.display = "block";
-};
+  noBtn.style.display = "none";
+});
 </script>
 
 </body>
