@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💖 Valentine</title>
+<title>💖 Special for Upasana</title>
 
 <style>
 * { box-sizing: border-box; }
@@ -37,69 +37,67 @@ body {
 /* CARD */
 .card {
   background: white;
-  padding: 36px;
-  border-radius: 26px;
+  padding: 40px 30px;
+  border-radius: 30px;
   text-align: center;
   width: 90%;
-  max-width: 380px;
+  max-width: 400px;
   box-shadow: 0 25px 50px rgba(0,0,0,0.25);
   position: relative;
   z-index: 10;
 }
 
-h2 { margin: 0 0 24px; line-height: 1.4; }
+h2 { margin-bottom: 30px; line-height: 1.4; color: #333; font-size: 24px; }
 
-/* BUTTON AREA */
+/* BUTTONS */
 .buttons {
   display: flex;
-  gap: 18px;
+  gap: 20px;
   justify-content: center;
   margin-top: 10px;
 }
 
 button {
-  padding: 14px 30px;
-  border-radius: 999px;
+  padding: 15px 35px;
+  border-radius: 50px;
   border: none;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   background: #f3f4f6;
   color: #111;
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
 }
 
-button.active {
-  background: #ff4d6d;
-  color: white;
-  box-shadow: 0 0 20px rgba(255,77,109,0.6);
-}
+#yes { background: #ff4d6d; color: white; }
+#yes:hover { transform: scale(1.1); box-shadow: 0 0 20px rgba(255,77,109,0.4); }
 
-/* MUTE BUTTON */
+/* MUTE ICON */
 #muteBtn {
   position: absolute;
   top: 15px;
   right: 15px;
   background: rgba(0,0,0,0.05);
-  padding: 8px;
+  padding: 8px 12px;
   font-size: 18px;
-  display: none; /* Only show when music starts */
+  display: none;
+  border-radius: 50%;
 }
 
 /* RESET BUTTON */
 #reset {
-  margin-top: 18px;
+  margin-top: 25px;
   background: #111827;
   color: white;
-  display: none;
+  display: none; /* Only shows after a choice is made */
 }
 
 #msg {
-  margin-top: 26px;
-  font-size: 16px;
+  margin-top: 25px;
+  font-size: 18px;
   font-weight: 600;
   color: #e11d48;
-  display: none;
+  min-height: 50px;
 }
 </style>
 </head>
@@ -107,29 +105,40 @@ button.active {
 <body>
 
 <div class="card">
-  <button id="muteBtn" title="Toggle Sound">🔊</button>
+  <button id="muteBtn">🔊</button>
 
-  <h2>Will you be my Valentine,<br>Upasana? 💘</h2>
+  <h2 id="mainHeading">Will you be my Valentine,<br>Upasana? 💘</h2>
 
-  <div class="buttons">
+  <div class="buttons" id="btnContainer">
     <button id="yes">YES 💖</button>
     <button id="no">NO 💔</button>
   </div>
 
   <p id="msg"></p>
-  <button id="reset">🔄 Reset</button>
+  <button id="reset">🔄 Start Over</button>
 </div>
 
-<audio id="valentineMusic" src="music.mp3" loop></audio>
+<audio id="valentineMusic" loop>
+  <source src="https://www.chosic.com/wp-content/uploads/2021/04/Indian-Music-Bollywood-Vibe.mp3" type="audio/mpeg">
+</audio>
 
 <script>
-/* ELEMENTS */
 const yesBtn = document.getElementById("yes");
 const noBtn = document.getElementById("no");
 const msg = document.getElementById("msg");
 const resetBtn = document.getElementById("reset");
 const muteBtn = document.getElementById("muteBtn");
 const music = document.getElementById("valentineMusic");
+const heading = document.getElementById("mainHeading");
+
+// Playful No Responses
+const noMessages = [
+  "Socha bhi kaise? 😜 Try again!",
+  "Nice try! But NO is not an option. 😏",
+  "Oops! Ungli phisal gayi? 😅",
+  "Are you sure? Phir se socho! 💕",
+  "Button hi kharab hai, YES dabao! 😄"
+];
 
 /* FLOATING HEARTS */
 function createHeart() {
@@ -137,77 +146,62 @@ function createHeart() {
   heart.className = "heart";
   heart.innerText = "❤️";
   heart.style.left = Math.random() * 100 + "vw";
-  heart.style.animationDuration = (6 + Math.random() * 4) + "s";
+  heart.style.animationDuration = (4 + Math.random() * 3) + "s";
   document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 10000);
+  setTimeout(() => heart.remove(), 7000);
 }
-setInterval(createHeart, 500);
+setInterval(createHeart, 400);
 
-/* NO BUTTON MESSAGES */
-const noMessages = [
-  "Nice try 😜 I’m still waiting for your YES 💖",
-  "Hmm… that button seems shy 😏",
-  "Oops! That’s not the answer I expected 😅",
-  "Are you sure? Try again 💕",
-  "That NO is not convincing at all 😄"
-];
-
-/* NO BUTTON MOVES ON HOVER */
-noBtn.addEventListener("mouseenter", () => {
-  const x = Math.random() * 200 - 100;
-  const y = Math.random() * 60 - 30;
+/* NO BUTTON EVASION (Moves away on hover) */
+noBtn.addEventListener("mouseover", () => {
+  const x = Math.random() * 150 - 75;
+  const y = Math.random() * 100 - 50;
   noBtn.style.transform = `translate(${x}px, ${y}px)`;
 });
 
-/* NO CLICK */
+/* NO BUTTON CLICK (If she actually manages to click it) */
 noBtn.addEventListener("click", () => {
   const randomMsg = noMessages[Math.floor(Math.random() * noMessages.length)];
-  noBtn.classList.add("active");
-  yesBtn.classList.remove("active");
-  msg.style.display = "block";
   msg.innerText = randomMsg;
   resetBtn.style.display = "inline-block";
 });
 
-/* YES CLICK - TRIGGERS MUSIC */
+/* YES BUTTON CLICK */
 yesBtn.addEventListener("click", () => {
-  // Play Music
-  music.play();
+  music.play().catch(e => console.log("Music play blocked by browser settings."));
   muteBtn.style.display = "block";
-
-  yesBtn.classList.add("active");
-  noBtn.classList.remove("active");
-  msg.style.display = "block";
-  msg.innerText = "Yay! ❤️ I knew you’d say YES 💕";
+  
+  heading.innerText = "I Knew It! ❤️";
+  msg.innerHTML = "I Love You, Upasana! 👩‍❤️‍👨<br>You just made my day!";
+  
+  // Hide the NO button entirely
   noBtn.style.display = "none";
   resetBtn.style.display = "inline-block";
+  
+  // Extra Celebration: Rapid hearts
+  for(let i=0; i<15; i++) { setTimeout(createHeart, i*100); }
 });
 
-/* MUTE/UNMUTE TOGGLE */
+/* MUTE TOGGLE */
 muteBtn.addEventListener("click", () => {
-  if (music.muted) {
-    music.muted = false;
-    muteBtn.innerText = "🔊";
-  } else {
-    music.muted = true;
-    muteBtn.innerText = "🔇";
-  }
+  music.muted = !music.muted;
+  muteBtn.innerText = music.muted ? "🔇" : "🔊";
 });
 
-/* RESET */
+/* RESET FUNCTION */
 resetBtn.addEventListener("click", () => {
-  // Stop Music
+  // Reset Music
   music.pause();
   music.currentTime = 0;
   music.muted = false;
   muteBtn.innerText = "🔊";
   muteBtn.style.display = "none";
 
-  yesBtn.classList.remove("active");
-  noBtn.classList.remove("active");
+  // Reset UI
+  heading.innerHTML = "Will you be my Valentine,<br>Upasana? 💘";
+  msg.innerText = "";
   noBtn.style.display = "inline-block";
   noBtn.style.transform = "translate(0,0)";
-  msg.style.display = "none";
   resetBtn.style.display = "none";
 });
 </script>
