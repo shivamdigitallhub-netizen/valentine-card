@@ -19,22 +19,6 @@ body {
   overflow: hidden;
 }
 
-/* FLOATING HEARTS */
-.heart {
-  position: absolute;
-  bottom: -30px;
-  font-size: 20px;
-  opacity: 0.7;
-  animation: floatUp linear infinite;
-  pointer-events: none;
-}
-
-@keyframes floatUp {
-  from { transform: translateY(0) scale(1); opacity: 0.8; }
-  to { transform: translateY(-120vh) scale(1.5); opacity: 0; }
-}
-
-/* CARD */
 .card {
   background: white;
   padding: 36px;
@@ -50,9 +34,7 @@ body {
 h2 { margin: 0; line-height: 1.5; }
 
 .buttons {
-  margin-top: 26px;
-  position: relative;
-  height: 90px;
+  margin-top: 22px;
 }
 
 button {
@@ -64,25 +46,19 @@ button {
   cursor: pointer;
 }
 
+#play {
+  background: #111827;
+  color: white;
+  margin-bottom: 14px;
+}
+
 #yes {
   background: #ff4d6d;
   color: white;
 }
 
-#yes.active {
-  transform: scale(1.08);
-  box-shadow: 0 0 25px rgba(255,77,109,0.7);
-}
-
-#no {
-  background: #f3f4f6;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
 #msg {
-  margin-top: 28px;
+  margin-top: 24px;
   font-size: 16px;
   font-weight: 600;
   color: #e11d48;
@@ -93,59 +69,35 @@ button {
 
 <body>
 
+<audio id="music" src="music.mp3" loop></audio>
+
 <div class="card">
   <h2>Will you be my Valentine,<br>Upasana? 💘</h2>
 
   <div class="buttons">
+    <button id="play">▶ Play Music 🎵</button><br><br>
     <button id="yes">YES 💖</button>
-    <button id="no">NO 💔</button>
   </div>
 
   <p id="msg">Always remember — I dream of you ❤️</p>
 </div>
 
 <script>
-/* FLOATING HEARTS */
-function createHeart() {
-  const heart = document.createElement("div");
-  heart.className = "heart";
-  heart.innerText = "❤️";
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.animationDuration = (5 + Math.random() * 5) + "s";
-  document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 10000);
-}
-setInterval(createHeart, 450);
-
-/* ELEMENTS */
+const music = document.getElementById("music");
+const playBtn = document.getElementById("play");
 const yesBtn = document.getElementById("yes");
-const noBtn = document.getElementById("no");
 const msg = document.getElementById("msg");
 
-let music; // IMPORTANT
+playBtn.onclick = () => {
+  music.volume = 0.6;
+  music.play();
+  playBtn.innerText = "🎶 Music Playing";
+  playBtn.disabled = true;
+};
 
-/* NO BUTTON RUNS AWAY */
-noBtn.addEventListener("mouseover", () => {
-  const x = Math.random() * 240 - 120;
-  const y = Math.random() * 120;
-  noBtn.style.transform = `translate(${x}px, ${y}px)`;
-});
-
-/* YES CLICK — CREATE & PLAY AUDIO */
-yesBtn.addEventListener("click", () => {
-  yesBtn.classList.add("active");
+yesBtn.onclick = () => {
   msg.style.display = "block";
-  noBtn.style.display = "none";
-
-  if (!music) {
-    music = new Audio("music.mp3");
-    music.loop = true;
-    music.volume = 0.6;
-    music.play().catch(err => {
-      alert("Sound blocked by browser. Tap YES again 🔊");
-    });
-  }
-});
+};
 </script>
 
 </body>
