@@ -30,14 +30,8 @@ body {
 }
 
 @keyframes floatUp {
-  from {
-    transform: translateY(0) scale(1);
-    opacity: 0.8;
-  }
-  to {
-    transform: translateY(-120vh) scale(1.4);
-    opacity: 0;
-  }
+  from { transform: translateY(0) scale(1); opacity: 0.8; }
+  to { transform: translateY(-120vh) scale(1.4); opacity: 0; }
 }
 
 /* CARD */
@@ -53,10 +47,7 @@ body {
   z-index: 10;
 }
 
-h2 {
-  margin: 0 0 24px;
-  line-height: 1.4;
-}
+h2 { margin: 0 0 24px; line-height: 1.4; }
 
 /* BUTTON AREA */
 .buttons {
@@ -66,7 +57,6 @@ h2 {
   margin-top: 10px;
 }
 
-/* BASE BUTTON */
 button {
   padding: 14px 30px;
   border-radius: 999px;
@@ -79,11 +69,21 @@ button {
   transition: all 0.25s ease;
 }
 
-/* ACTIVE BUTTON */
 button.active {
   background: #ff4d6d;
   color: white;
   box-shadow: 0 0 20px rgba(255,77,109,0.6);
+}
+
+/* MUTE BUTTON */
+#muteBtn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0,0,0,0.05);
+  padding: 8px;
+  font-size: 18px;
+  display: none; /* Only show when music starts */
 }
 
 /* RESET BUTTON */
@@ -94,7 +94,6 @@ button.active {
   display: none;
 }
 
-/* MESSAGE */
 #msg {
   margin-top: 26px;
   font-size: 16px;
@@ -108,6 +107,8 @@ button.active {
 <body>
 
 <div class="card">
+  <button id="muteBtn" title="Toggle Sound">🔊</button>
+
   <h2>Will you be my Valentine,<br>Upasana? 💘</h2>
 
   <div class="buttons">
@@ -119,7 +120,17 @@ button.active {
   <button id="reset">🔄 Reset</button>
 </div>
 
+<audio id="valentineMusic" src="music.mp3" loop></audio>
+
 <script>
+/* ELEMENTS */
+const yesBtn = document.getElementById("yes");
+const noBtn = document.getElementById("no");
+const msg = document.getElementById("msg");
+const resetBtn = document.getElementById("reset");
+const muteBtn = document.getElementById("muteBtn");
+const music = document.getElementById("valentineMusic");
+
 /* FLOATING HEARTS */
 function createHeart() {
   const heart = document.createElement("div");
@@ -132,13 +143,7 @@ function createHeart() {
 }
 setInterval(createHeart, 500);
 
-/* ELEMENTS */
-const yesBtn = document.getElementById("yes");
-const noBtn = document.getElementById("no");
-const msg = document.getElementById("msg");
-const resetBtn = document.getElementById("reset");
-
-/* DIFFERENT NO MESSAGES */
+/* NO BUTTON MESSAGES */
 const noMessages = [
   "Nice try 😜 I’m still waiting for your YES 💖",
   "Hmm… that button seems shy 😏",
@@ -147,7 +152,7 @@ const noMessages = [
   "That NO is not convincing at all 😄"
 ];
 
-/* NO BUTTON MOVES */
+/* NO BUTTON MOVES ON HOVER */
 noBtn.addEventListener("mouseenter", () => {
   const x = Math.random() * 200 - 100;
   const y = Math.random() * 60 - 30;
@@ -164,8 +169,12 @@ noBtn.addEventListener("click", () => {
   resetBtn.style.display = "inline-block";
 });
 
-/* YES CLICK */
+/* YES CLICK - TRIGGERS MUSIC */
 yesBtn.addEventListener("click", () => {
+  // Play Music
+  music.play();
+  muteBtn.style.display = "block";
+
   yesBtn.classList.add("active");
   noBtn.classList.remove("active");
   msg.style.display = "block";
@@ -174,8 +183,26 @@ yesBtn.addEventListener("click", () => {
   resetBtn.style.display = "inline-block";
 });
 
+/* MUTE/UNMUTE TOGGLE */
+muteBtn.addEventListener("click", () => {
+  if (music.muted) {
+    music.muted = false;
+    muteBtn.innerText = "🔊";
+  } else {
+    music.muted = true;
+    muteBtn.innerText = "🔇";
+  }
+});
+
 /* RESET */
 resetBtn.addEventListener("click", () => {
+  // Stop Music
+  music.pause();
+  music.currentTime = 0;
+  music.muted = false;
+  muteBtn.innerText = "🔊";
+  muteBtn.style.display = "none";
+
   yesBtn.classList.remove("active");
   noBtn.classList.remove("active");
   noBtn.style.display = "inline-block";
