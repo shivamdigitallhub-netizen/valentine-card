@@ -15,34 +15,37 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: "Poppins", sans-serif;
+  font-family: "Poppins", system-ui, sans-serif;
   overflow: hidden;
 }
 
 .card {
   background: white;
-  padding: 32px;
-  border-radius: 24px;
+  padding: 36px;
+  border-radius: 26px;
   text-align: center;
   width: 90%;
   max-width: 380px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-  position: relative;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.25);
 }
 
 h2 {
-  margin: 0;
+  margin: 0 0 24px;
   line-height: 1.4;
 }
 
+/* BUTTON AREA */
 .buttons {
-  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
   position: relative;
-  height: 120px;
 }
 
+/* BUTTON STYLE */
 button {
-  padding: 14px 28px;
+  padding: 14px 32px;
   border-radius: 999px;
   border: none;
   font-size: 16px;
@@ -53,7 +56,6 @@ button {
 #play {
   background: #111827;
   color: white;
-  margin-bottom: 18px;
 }
 
 #yes {
@@ -63,14 +65,12 @@ button {
 
 #no {
   background: #f3f4f6;
-  position: absolute;
-  top: 60px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
 }
 
+/* MESSAGE */
 #msg {
-  margin-top: 22px;
+  margin-top: 24px;
   font-size: 16px;
   font-weight: 600;
   color: #e11d48;
@@ -81,19 +81,19 @@ button {
 
 <body>
 
-<!-- REAL AUDIO ELEMENT -->
-<audio id="music" src="music.mp3" loop></audio>
+<!-- AUDIO (browser-safe) -->
+<audio id="music" src="music.mp3" preload="auto" controls style="display:none;"></audio>
 
 <div class="card">
   <h2>Will you be my Valentine,<br>Upasana? 💘</h2>
 
   <div class="buttons">
-    <button id="play">▶ Play Music 🎵</button><br>
+    <button id="play">▶ Play Music 🎵</button>
     <button id="yes">YES 💖</button>
     <button id="no">NO 💔</button>
   </div>
 
-  <p id="msg">Always remember — I dream of you ❤️</p>
+  <p id="msg"></p>
 </div>
 
 <script>
@@ -103,24 +103,31 @@ const yesBtn = document.getElementById("yes");
 const noBtn = document.getElementById("no");
 const msg = document.getElementById("msg");
 
-/* PLAY MUSIC — CLEAN */
+/* PLAY MUSIC */
 playBtn.addEventListener("click", () => {
+  music.muted = false;
   music.volume = 0.6;
   music.play();
   playBtn.innerText = "🎶 Music Playing";
   playBtn.disabled = true;
 });
 
-/* NO BUTTON RUNS AWAY */
+/* NO BUTTON MOVES */
 noBtn.addEventListener("mouseenter", () => {
-  const x = Math.random() * 240 - 120;
-  const y = Math.random() * 60;
-  noBtn.style.transform = `translate(${x}px, ${y}px)`;
+  const x = Math.random() * 120 - 60;
+  noBtn.style.transform = `translateX(${x}px)`;
+});
+
+/* NO CLICK MESSAGE */
+noBtn.addEventListener("click", () => {
+  msg.style.display = "block";
+  msg.innerText = "Nice try 😜 I’ll wait for your YES 💖";
 });
 
 /* YES CLICK */
 yesBtn.addEventListener("click", () => {
   msg.style.display = "block";
+  msg.innerText = "Always remember — I dream of you ❤️";
   noBtn.style.display = "none";
 });
 </script>
