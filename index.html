@@ -107,7 +107,7 @@ button {
 <body>
 
 <!-- 🎵 LOCAL MUSIC FILE -->
-<audio id="music" loop>
+<audio id="music" preload="auto">
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
@@ -142,6 +142,18 @@ const noBtn = document.getElementById("no");
 const msg = document.getElementById("msg");
 const music = document.getElementById("music");
 
+/* UNLOCK AUDIO ON FIRST USER TOUCH (IMPORTANT) */
+let audioUnlocked = false;
+document.body.addEventListener("click", () => {
+  if (!audioUnlocked) {
+    music.play().then(() => {
+      music.pause();
+      music.currentTime = 0;
+      audioUnlocked = true;
+    }).catch(() => {});
+  }
+}, { once: true });
+
 /* NO BUTTON RUNS AWAY */
 noBtn.addEventListener("mouseover", () => {
   const x = Math.random() * 240 - 120;
@@ -150,14 +162,19 @@ noBtn.addEventListener("mouseover", () => {
 });
 
 /* YES BUTTON ACTION */
-yesBtn.onclick = () => {
+yesBtn.addEventListener("click", async () => {
   yesBtn.classList.add("active");
   msg.style.display = "block";
   noBtn.style.display = "none";
 
-  music.volume = 0.6;
-  music.play().catch(() => {});
-};
+  try {
+    music.currentTime = 0;
+    music.volume = 0.6;
+    await music.play();
+  } catch (e) {
+    alert("Tap YES once more to enable sound 🔊");
+  }
+});
 </script>
 
 </body>
