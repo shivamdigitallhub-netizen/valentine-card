@@ -6,9 +6,7 @@
 <title>💖 One Question</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -32,14 +30,8 @@ body {
 }
 
 @keyframes floatUp {
-  0% {
-    transform: translateY(0) scale(1);
-    opacity: 0.8;
-  }
-  100% {
-    transform: translateY(-120vh) scale(1.5);
-    opacity: 0;
-  }
+  from { transform: translateY(0) scale(1); opacity: 0.8; }
+  to { transform: translateY(-120vh) scale(1.5); opacity: 0; }
 }
 
 /* CARD */
@@ -55,12 +47,8 @@ body {
   z-index: 10;
 }
 
-h2 {
-  margin: 0;
-  line-height: 1.5;
-}
+h2 { margin: 0; line-height: 1.5; }
 
-/* BUTTONS */
 .buttons {
   margin-top: 26px;
   position: relative;
@@ -74,7 +62,6 @@ button {
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 #yes {
@@ -106,11 +93,6 @@ button {
 
 <body>
 
-<!-- 🎵 LOCAL MUSIC FILE -->
-<audio id="music" preload="auto">
-  <source src="music.mp3" type="audio/mpeg">
-</audio>
-
 <div class="card">
   <h2>Will you be my Valentine,<br>Upasana? 💘</h2>
 
@@ -131,7 +113,6 @@ function createHeart() {
   heart.style.left = Math.random() * 100 + "vw";
   heart.style.animationDuration = (5 + Math.random() * 5) + "s";
   document.body.appendChild(heart);
-
   setTimeout(() => heart.remove(), 10000);
 }
 setInterval(createHeart, 450);
@@ -140,19 +121,8 @@ setInterval(createHeart, 450);
 const yesBtn = document.getElementById("yes");
 const noBtn = document.getElementById("no");
 const msg = document.getElementById("msg");
-const music = document.getElementById("music");
 
-/* UNLOCK AUDIO ON FIRST USER TOUCH (IMPORTANT) */
-let audioUnlocked = false;
-document.body.addEventListener("click", () => {
-  if (!audioUnlocked) {
-    music.play().then(() => {
-      music.pause();
-      music.currentTime = 0;
-      audioUnlocked = true;
-    }).catch(() => {});
-  }
-}, { once: true });
+let music; // IMPORTANT
 
 /* NO BUTTON RUNS AWAY */
 noBtn.addEventListener("mouseover", () => {
@@ -161,18 +131,19 @@ noBtn.addEventListener("mouseover", () => {
   noBtn.style.transform = `translate(${x}px, ${y}px)`;
 });
 
-/* YES BUTTON ACTION */
-yesBtn.addEventListener("click", async () => {
+/* YES CLICK — CREATE & PLAY AUDIO */
+yesBtn.addEventListener("click", () => {
   yesBtn.classList.add("active");
   msg.style.display = "block";
   noBtn.style.display = "none";
 
-  try {
-    music.currentTime = 0;
+  if (!music) {
+    music = new Audio("music.mp3");
+    music.loop = true;
     music.volume = 0.6;
-    await music.play();
-  } catch (e) {
-    alert("Tap YES once more to enable sound 🔊");
+    music.play().catch(err => {
+      alert("Sound blocked by browser. Tap YES again 🔊");
+    });
   }
 });
 </script>
