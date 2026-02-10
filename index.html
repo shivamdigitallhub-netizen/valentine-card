@@ -61,13 +61,12 @@ h2 {
 /* BUTTON AREA */
 .buttons {
   display: flex;
-  gap: 20px;
+  gap: 18px;
   justify-content: center;
   margin-top: 10px;
-  position: relative;
 }
 
-/* BUTTON STYLE */
+/* BASE BUTTON */
 button {
   padding: 14px 30px;
   border-radius: 999px;
@@ -75,17 +74,24 @@ button {
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  background: #f3f4f6;
+  color: #111;
+  transition: all 0.25s ease;
 }
 
-#yes {
+/* ACTIVE BUTTON */
+button.active {
   background: #ff4d6d;
   color: white;
+  box-shadow: 0 0 20px rgba(255,77,109,0.6);
 }
 
-#no {
-  background: #f3f4f6;
-  position: relative;
+/* RESET BUTTON */
+#reset {
+  margin-top: 18px;
+  background: #111827;
+  color: white;
+  display: none;
 }
 
 /* MESSAGE */
@@ -110,6 +116,7 @@ button {
   </div>
 
   <p id="msg"></p>
+  <button id="reset">🔄 Reset</button>
 </div>
 
 <script>
@@ -125,29 +132,56 @@ function createHeart() {
 }
 setInterval(createHeart, 500);
 
-/* BUTTON LOGIC */
+/* ELEMENTS */
 const yesBtn = document.getElementById("yes");
 const noBtn = document.getElementById("no");
 const msg = document.getElementById("msg");
+const resetBtn = document.getElementById("reset");
 
-/* NO BUTTON RUNS AWAY (CLEAR MOVEMENT) */
+/* DIFFERENT NO MESSAGES */
+const noMessages = [
+  "Nice try 😜 I’m still waiting for your YES 💖",
+  "Hmm… that button seems shy 😏",
+  "Oops! That’s not the answer I expected 😅",
+  "Are you sure? Try again 💕",
+  "That NO is not convincing at all 😄"
+];
+
+/* NO BUTTON MOVES */
 noBtn.addEventListener("mouseenter", () => {
   const x = Math.random() * 200 - 100;
   const y = Math.random() * 60 - 30;
   noBtn.style.transform = `translate(${x}px, ${y}px)`;
 });
 
-/* NO CLICK MESSAGE */
+/* NO CLICK */
 noBtn.addEventListener("click", () => {
+  const randomMsg = noMessages[Math.floor(Math.random() * noMessages.length)];
+  noBtn.classList.add("active");
+  yesBtn.classList.remove("active");
   msg.style.display = "block";
-  msg.innerText = "Nice try 😜 I’m still waiting for your YES 💖";
+  msg.innerText = randomMsg;
+  resetBtn.style.display = "inline-block";
 });
 
 /* YES CLICK */
 yesBtn.addEventListener("click", () => {
+  yesBtn.classList.add("active");
+  noBtn.classList.remove("active");
   msg.style.display = "block";
   msg.innerText = "Yay! ❤️ I knew you’d say YES 💕";
   noBtn.style.display = "none";
+  resetBtn.style.display = "inline-block";
+});
+
+/* RESET */
+resetBtn.addEventListener("click", () => {
+  yesBtn.classList.remove("active");
+  noBtn.classList.remove("active");
+  noBtn.style.display = "inline-block";
+  noBtn.style.transform = "translate(0,0)";
+  msg.style.display = "none";
+  resetBtn.style.display = "none";
 });
 </script>
 
